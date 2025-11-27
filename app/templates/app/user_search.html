@@ -1,0 +1,29 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block title %}Search Users{% endblock %}
+
+{% block content %}
+<h2>Search Users</h2>
+
+<form method="get" action="{% url 'user_search' %}">
+    <input type="text" name="q" placeholder="Search by username or name" value="{{ query }}">
+    <button type="submit">Search</button>
+</form>
+
+{% if results %}
+    <ul>
+        {% for user in results %}
+            <li>
+                {% if user.profile.avatar %}
+                    <img src="{{ user.profile.avatar.url }}" style="width:40px;height:40px;object-fit:cover;border-radius:50%;">
+                {% else %}
+                    <img src="{% static 'app/images/default-avatar.jpg' %}" style="width:40px;height:40px;object-fit:cover;border-radius:50%;">
+                {% endif %}
+                <a href="{% url 'user_profile' user.username %}">{{ user.username }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% elif query %}
+    <p>No users found for "{{ query }}"</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'app/base.html' %}
+{% block content %}
+<h2>Ваші чати</h2>
+<ul>
+    {% for chat in chats %}
+    <li>
+        {% for user in chat.participants.all %}
+            {% if user != request.user %}
+                <a href="{% url 'chat_detail' chat.id %}">{{ user.username }}</a>
+            {% endif %}
+        {% endfor %}
+    </li>
+    {% empty %}
+    <li>У вас немає чатів</li>
+    {% endfor %}
+</ul>
+{% endblock %}

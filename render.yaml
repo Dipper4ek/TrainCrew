@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: TrainCrew
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn config.wsgi"
+    envVars:
+      - key: DEBUG
+        value: False

@@ -16,10 +16,14 @@
         {% if user.is_authenticated %}
             <a href="{% url 'profile' %}">Profile</a>
             <a href="{% url 'logout' %}">Logout</a>
+            <a href="{% url 'user_search' %}">Search</a>
+            <a href="{% url 'start_chat' user.username %}">Chat</a>
+
         {% else %}
             <a href="{% url 'login' %}">Login</a>
             <a href="{% url 'register' %}">Sign Up</a>
         {% endif %}
+
     </nav>
 
 </header>
