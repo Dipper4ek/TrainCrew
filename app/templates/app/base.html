@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}TrainCrew{% endblock %}</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'app/base.css' %}">
@@ -17,7 +18,7 @@
             <a href="{% url 'profile' %}">Profile</a>
             <a href="{% url 'logout' %}">Logout</a>
             <a href="{% url 'user_search' %}">Search</a>
-            <a href="{% url 'start_chat' user.username %}">Chat</a>
+            <a href="{% url 'chat_list'  %}">Chat</a>
 
         {% else %}
             <a href="{% url 'login' %}">Login</a>

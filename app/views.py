@@ -133,6 +133,7 @@ def start_chat(request, username):
         chat.save()
     return redirect('chat_detail', chat_id=chat.id)
 
+
 @login_required
 def chat_messages_json(request, chat_id):
     chat = get_object_or_404(Chat, id=chat_id)

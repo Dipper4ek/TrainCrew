@@ -24,7 +24,7 @@
             font-family: 'Arial', sans-serif;
             color: white;
             margin: 0;">
-            {{ user.username }}
+            {{ profile.user }}
         </h2>
         <h3 style="
             font-size: 1.5rem;
@@ -34,6 +34,13 @@
             margin: 0;">
             {{ profile.name }}
         </h3>
+
+{% if not owner %}
+    <a href="{% url 'start_chat' profile.user.username %}" class="btn btn-primary">
+        Написати користувачу
+    </a>
+{% endif %}
+
         {% if owner %}
         <a href="{% url 'edit_profile' %}"
    style="
