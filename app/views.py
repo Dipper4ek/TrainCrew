@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
-from .models import Profile, Chat
+from .models import Profile, Chat, Post
 from django.shortcuts import render, get_object_or_404
 from .forms import MessageForm
 from django.http import JsonResponse
@@ -58,12 +58,22 @@ def profile(request):
     profile = get_object_or_404(Profile, user=request.user)
     return render(request, 'app/profile.html', {'profile': profile, 'owner': True})
 
+
 def user_profile(request, username):
-    # отримуємо профіль за username користувача
     profile = get_object_or_404(Profile, user__username=username)
-    # перевіряємо, чи це твій профіль
     is_owner = request.user.is_authenticated and request.user.username == username
-    return render(request, 'app/profile.html', {'profile': profile, 'owner': is_owner})
+
+    posts_count = Post.objects.filter(author=profile.user).count()
+    followers_count = profile.followers.count()
+    following_count = request.user.following.count() if request.user.is_authenticated else profile.user.following.count()
+
+    return render(request, 'app/profile.html', {
+        'profile': profile,
+        'owner': is_owner,
+        'posts_count': posts_count,
+        'followers_count': followers_count,
+        'following_count': following_count,
+    })
 @login_required
 def edit_profile(request):
     profile = request.user.profile  # отримуємо профіль поточного користувача
@@ -81,20 +91,20 @@ def edit_profile(request):
 
     return render(request, 'app/edit_profile.html', {'profile': profile})
 
+
 def user_search(request):
     query = request.GET.get('q', '')  # отримуємо параметр ?q=...
-    results = []
 
     if query:
         # Пошук по username або по профілю name
-        results = User.objects.filter(
-            username__icontains=query
-        ).union(
+        results = User.objects.filter(username__icontains=query).union(
             User.objects.filter(profile__name__icontains=query)
         )
+    else:
+        # Якщо пошук порожній, показуємо всіх користувачів
+        results = User.objects.all()
 
     return render(request, 'app/user_search.html', {'results': results, 'query': query})
-
 
 @login_required
 def chat_list(request):
@@ -147,3 +157,16 @@ def chat_messages_json(request, chat_id):
         'timestamp': msg.timestamp.strftime("%H:%M:%S")
     } for msg in messages]
     return JsonResponse({'messages': data})
+
+
+@login_required
+def follow_toggle(request, username):
+    other_user = get_object_or_404(User, username=username)
+    profile = other_user.profile
+
+    if request.user in profile.followers.all():
+        profile.followers.remove(request.user)  # відписка
+    else:
+        profile.followers.add(request.user)     # підписка
+
+    return redirect('user_profile', username=username)

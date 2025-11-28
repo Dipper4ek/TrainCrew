@@ -14,5 +14,6 @@ urlpatterns = [
     path('chat/<int:chat_id>/', views.chat_detail, name='chat_detail'),
     path('chat/start/<str:username>/', views.start_chat, name='start_chat'),
     path('chat/<int:chat_id>/json/', chat_messages_json, name='chat_messages_json'),
+    path('profile/<str:username>/follow/', views.follow_toggle, name='follow_toggle'),
 
 ]

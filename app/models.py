@@ -9,6 +9,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile', null=True)
     avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
     bio = models.TextField(blank=True)
+    followers = models.ManyToManyField(User, related_name='following', blank=True)
 
     def __str__(self):
         return self.name
@@ -44,3 +45,8 @@ class ChatMessage(models.Model):
 
     def __str__(self):
         return f"{self.sender.username}: {self.content[:20]}"
+
+class Post(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
