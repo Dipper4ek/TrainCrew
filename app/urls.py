@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import HomePageView, chat_messages_json
+from .views import HomePageView, chat_messages_json, map_view, get_all_locations, update_location
 from . import views
 urlpatterns = [
     path('home/', HomePageView.as_view(), name='home_page'),
@@ -15,5 +15,8 @@ urlpatterns = [
     path('chat/start/<str:username>/', views.start_chat, name='start_chat'),
     path('chat/<int:chat_id>/json/', chat_messages_json, name='chat_messages_json'),
     path('profile/<str:username>/follow/', views.follow_toggle, name='follow_toggle'),
+    path("map/", map_view, name="map"),
+    path("api/map/", get_all_locations),
+    path("api/update-location/", update_location),
 
 ]

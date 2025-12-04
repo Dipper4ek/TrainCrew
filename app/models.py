@@ -46,6 +46,20 @@ class ChatMessage(models.Model):
     def __str__(self):
         return f"{self.sender.username}: {self.content[:20]}"
 
+class UserLocation(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.user.username
+
+
+
+
+
+
 class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
     content = models.TextField()

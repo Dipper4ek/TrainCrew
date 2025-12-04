@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import render
 from django.views import View
 from django.shortcuts import render, redirect
@@ -5,11 +6,50 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
-from .models import Profile, Chat, Post
+from django.views.decorators.csrf import csrf_exempt
+
+from .models import Profile, Chat, Post, UserLocation
 from django.shortcuts import render, get_object_or_404
 from .forms import MessageForm
 from django.http import JsonResponse
 
+@login_required
+def map_view(request):
+    return render(request, "app/map.html")
+
+
+def get_all_locations(request):
+    users = UserLocation.objects.select_related("user")
+
+    data = []
+    for u in users:
+        data.append({
+            "id": u.user.id,
+            "username": u.user.username,
+            "lat": u.latitude,
+            "lng": u.longitude
+        })
+
+    return JsonResponse(data, safe=False)
+
+
+@csrf_exempt
+@login_required
+def update_location(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+
+        lat = data["lat"]
+        lng = data["lng"]
+
+        UserLocation.objects.update_or_create(
+            user=request.user,
+            defaults={"latitude": lat, "longitude": lng}
+        )
+
+        return JsonResponse({"status": "ok"})
+
+    return JsonResponse({"status": "error"})
 class HomePageView(View):
 
     def get(self, request):

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Карта користувачів</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <style>
+        body { margin: 0; }
+        #map { height: 100vh; }
+        .btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 999;
+            padding: 12px 20px;
+            background: black;
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="btn" onclick="sendLocation()">📍 Поділитись місцем</div>
+<div id="map"></div>
+
+<script>
+const map = L.map('map').setView([50.45, 30.52], 4);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+const markers = {};
+
+function loadUsers() {
+    fetch("/api/map/")
+        .then(res => res.json())
+        .then(users => {
+            users.forEach(user => {
+                if (markers[user.id]) {
+                    markers[user.id].setLatLng([user.lat, user.lng]);
+                } else {
+                    const marker = L.marker([user.lat, user.lng]).addTo(map);
+                    marker.bindPopup(`
+                        <b>${user.username}</b><br>
+                        <button onclick="openChat(${user.id})">Написати</button>
+                    `);
+                    markers[user.id] = marker;
+                }
+            });
+        });
+}
+
+setInterval(loadUsers, 5000);
+loadUsers();
+
+
+function sendLocation() {
+    navigator.geolocation.getCurrentPosition(pos => {
+        fetch("/api/update-location/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                lat: pos.coords.latitude,
+                lng: pos.coords.longitude
+            })
+        })
+    })
+}
+
+function openChat(userId) {
+    window.location.href = `/chat/${userId}/`
+}
+</script>
+
+</body>
+</html>
