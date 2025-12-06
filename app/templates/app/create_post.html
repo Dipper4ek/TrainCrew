@@ -1,0 +1,22 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block title %}Create Post{% endblock %}
+
+{% block content %}
+<div class="create-post-container">
+
+    <h2>Створити пост</h2>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <textarea name="content" placeholder="Що у тебе нового?" required></textarea>
+
+        <input type="file" name="image">
+
+        <button type="submit">Опублікувати</button>
+    </form>
+
+</div>
+{% endblock %}

@@ -76,11 +76,30 @@ def update_location(request):
 
 
 
-class HomePageView(View):
+def home_page_view(request):
+    posts = list(Post.objects.select_related('author').all())
+    random.shuffle(posts)
 
-    def get(self, request):
-        return render(request, 'app/home_page.html')
+    return render(request, 'app/home_page.html', {
+        'posts': posts
+    })
 
+
+@login_required
+def create_post_view(request):
+    if request.method == "POST":
+        content = request.POST.get("content")
+        image = request.FILES.get("image")
+
+        if content:
+            Post.objects.create(
+                author=request.user,
+                content=content,
+                image=image
+            )
+            return redirect("home_page")
+
+    return render(request, "app/create_post.html")
 
 def register(request):
     if request.method == "POST":
@@ -127,12 +146,24 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    return redirect('home_page')
+    return redirect('login')
 
 @login_required
 def profile(request):
     profile = get_object_or_404(Profile, user=request.user)
-    return render(request, 'app/profile.html', {'profile': profile, 'owner': True})
+    posts = Post.objects.filter(author=request.user).order_by('-created_at')
+    posts_count = posts.count()
+    followers_count = profile.followers.count()
+    following_count = request.user.following.count()  # якщо є ManyToManyField following
+
+    return render(request, 'app/profile.html', {
+        'profile': profile,
+        'owner': True,
+        'posts': posts,
+        'posts_count': posts_count,
+        'followers_count': followers_count,
+        'following_count': following_count,
+    })
 
 
 def user_profile(request, username):
@@ -140,12 +171,14 @@ def user_profile(request, username):
     is_owner = request.user.is_authenticated and request.user.username == username
 
     posts_count = Post.objects.filter(author=profile.user).count()
+    posts = Post.objects.filter(author=profile.user).order_by('-created_at')
     followers_count = profile.followers.count()
     following_count = request.user.following.count() if request.user.is_authenticated else profile.user.following.count()
 
     return render(request, 'app/profile.html', {
         'profile': profile,
         'owner': is_owner,
+        'posts': posts,
         'posts_count': posts_count,
         'followers_count': followers_count,
         'following_count': following_count,
@@ -246,3 +279,4 @@ def follow_toggle(request, username):
         profile.followers.add(request.user)     # підписка
 
     return redirect('user_profile', username=username)
+

@@ -1,12 +1,38 @@
 {% extends 'app/base.html' %}
 {% load static %}
-{% block title %}Home{% endblock %}
 
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'app/home_page.css' %}">
-{% endblock %}
+{% block title %}Feed{% endblock %}
 
-<section class="content">
-  <div class="homepage-container">
+{% block content %}
+<div class="feed-container">
+
+{% for post in posts %}
+    <div class="feed-post">
+
+        <div class="feed-header">
+            {% if profile.avatar %}
+     <a><img src="{{ profile.avatar.url }}" alt="Avatar" style="width: 20px; height: 20px; object-fit:cover;border-radius:50%; solid white; padding: 0px 10px;"></a>
+    {% else %}
+     <a><img src="{% static 'app/images/default-avatar.jpg' %}" alt="Avatar" style="width: 20px; height: 20px; object-fit:cover;border-radius:50%;  solid white; padding: 0фpx 10px; "></a>
+    {% endif %}
+            <a href="{% url 'user_profile' post.author.username %}">
+                {{ post.author.username }}
+            </a>
+        </div>
+
+        {% if post.image %}
+            <img src="{{ post.image.url }}" class="feed-image">
+        {% endif %}
+
+
+
+        <div class="feed-footer">
+            <p>{{ post.content }}</p>
+            <span class="feed-date">{{ post.created_at|date:"d.m.Y H:i" }}</span>
+        </div>
+
     </div>
-</section>
+{% endfor %}
+
+</div>
+{% endblock %}

@@ -109,5 +109,26 @@
     <div class="posts">
         <!-- Тут можна додати пости користувача -->
     </div>
+    <div class="feed-container">
+{% for post in posts %}
+    <div class="feed-post">
+
+        {% if post.image %}
+            <img src="{{ post.image.url }}" class="feed-image">
+        {% endif %}
+
+        <div class="feed-body">
+            <p>{{ post.content }}</p>
+        </div>
+
+        <div class="feed-footer">
+            <span class="feed-date">{{ post.created_at|date:"d.m.Y H:i" }}</span>
+        </div>
+
+    </div>
+{% empty %}
+    <p style="text-align:center; color:#aaa;">This user has no posts yet.</p>
+{% endfor %}
+</div>
 </div>
 {% endblock %}

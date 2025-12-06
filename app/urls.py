@@ -1,8 +1,10 @@
 from django.urls import path
-from .views import HomePageView, chat_messages_json, map_view, get_all_locations, update_location
+from .views import home_page_view, chat_messages_json, map_view, get_all_locations, update_location
 from . import views
 urlpatterns = [
-    path('home/', HomePageView.as_view(), name='home_page'),
+    path('home/', views.home_page_view, name='home_page'),
+    path('create/', views.create_post_view, name='create_post'),
+
     path('register/', views.register, name='register'),
     path('', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
