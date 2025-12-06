@@ -1,116 +1,16 @@
+/* =========================
+   HEADER / NAVIGATION
+========================= */
 
-
-/* === ШАПКА === */
+/* Шапка */
 header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 30px;
+    padding: 0px 30px;
 }
 
-.logo a {
-    color: #ffd700; /* золотий для святковості */
-    font-size: 28px;
-    font-weight: bold;
-    text-decoration: none;
-}
-
-nav a {
-    color: white;
-    margin-left: 20px;
-    font-size: 18px;
-    text-decoration: none;
-    transition: 0.3s;
-}
-
-/* Загальні стилі для body */
-body {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh; /* центр по вертикалі */
-}
-
-/* Контейнер форми */
-.auth-container {
-    padding: 30px 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    width: 90%;
-    max-width: 400px; /* для великих екранів */
-    text-align: center;
-}
-
-/* Заголовок */
-.auth-container h1 {
-    margin-bottom: 20px;
-    font-size: 24px;
-}
-
-/* Поля вводу */
-.auth-container input[type="text"],
-.auth-container input[type="password"],
-.auth-container input[type="email"] {
-    width: 100%;
-    background-color: #FFFFFF;
-    padding: 12px 15px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    box-sizing: border-box;
-    font-size: 16px;
-}
-
-/* Кнопки */
-.auth-container button {
-    width: 100%;
-    padding: 12px;
-    margin-top: 15px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    font-size: 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.auth-container button:hover {
-    background-color: #0056b3;
-}
-
-/* Мобільна адаптація */
-@media (max-width: 480px) {
-    .auth-container {
-        padding: 20px 15px;
-    }
-
-    .auth-container h1 {
-        font-size: 20px;
-    }
-
-    .auth-container input, .auth-container button {
-        font-size: 14px;
-        padding: 10px;
-    }
-}
-
-
-
-
-
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 30px;
-    background: #0A0A0A;
-}
-
+/* Логотип */
 .logo a {
     color: #FFFFFF;
     font-size: 28px;
@@ -118,8 +18,9 @@ header {
     text-decoration: none;
 }
 
+/* Навігація */
 nav a {
-    color: #FFFFFF; /* червоні кнопки */
+    color: #FFFFFF;
     margin-left: 20px;
     font-size: 18px;
     text-decoration: none;
@@ -127,8 +28,13 @@ nav a {
 }
 
 nav a:hover {
-    color: #00bfff; /* світло-зелений при наведенні */
+    color: #00bfff;
 }
+
+
+/* =========================
+   MAIN CONTAINER
+========================= */
 
 main {
     padding: 20px;
@@ -137,16 +43,10 @@ main {
     max-width: 1200px;
 }
 
-.snowflake {
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  background: linear-gradient(white, white);
-  border-radius: 50%;
-  filter: drop-shadow(0 0 10px white);
-}
 
-
+/* =========================
+   BODY
+========================= */
 
 body {
     margin: 0;
@@ -157,6 +57,22 @@ body {
     color: white;
 }
 
+
+/* =========================
+   SNOWFLAKE ANIMATION
+========================= */
+
+/* Базова форма сніжинки */
+.snowflake {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: linear-gradient(white, white);
+    border-radius: 50%;
+    filter: drop-shadow(0 0 10px white);
+}
+
+/* Анімаційні налаштування */
 .snowflake {
     position: fixed;
     top: -50px;
@@ -170,10 +86,62 @@ body {
     animation-iteration-count: infinite;
 }
 
+/* Анімація падіння */
 @keyframes fall {
-    0% { transform: translateY(0) rotate(0deg); }
-    100% { transform: translateY(100vh) rotate(360deg); }
+    0% {
+        transform: translateY(0) rotate(0deg);
+    }
+    100% {
+        transform: translateY(100vh) rotate(360deg);
+    }
 }
 
 
+/* =========================
+   AVATAR DROPDOWN
+========================= */
 
+.avatar-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.avatar-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+
+/* Меню */
+.avatar-menu {
+    position: absolute;
+    top: 35px;
+    right: 0;
+    background: #0A0A0A;
+    border-radius: 8px;
+    min-width: 160px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    display: none;
+    overflow: hidden;
+    z-index: 9999;
+}
+
+.avatar-menu a {
+    display: block;
+    padding: 10px 14px;
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+.avatar-menu a:hover {
+    background: #00bfff;
+}
+
+/* НАВЕДЕННЯ МИШКОЮ */
+.avatar-dropdown:hover .avatar-menu {
+    display: block;
+}

@@ -1,0 +1,96 @@
+/* =========================
+   GLOBAL / BODY (CENTER)
+========================= */
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* центр по вертикалі */
+}
+
+
+/* =========================
+   AUTH CONTAINER
+========================= */
+
+.auth-container {
+    padding: 30px 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    width: 90%;
+    max-width: 400px; /* для великих екранів */
+    text-align: center;
+}
+
+
+/* =========================
+   AUTH TITLE
+========================= */
+
+.auth-container h1 {
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+
+/* =========================
+   INPUT FIELDS
+========================= */
+
+.auth-container input[type="text"],
+.auth-container input[type="password"],
+.auth-container input[type="email"] {
+    width: 100%;
+    background-color: #FFFFFF;
+    padding: 12px 15px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+
+/* =========================
+   BUTTONS
+========================= */
+
+.auth-container button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
+    background-color: #1abc9c;
+    color: white;
+    border: none;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+
+
+
+/* =========================
+   RESPONSIVE (MOBILE)
+========================= */
+
+@media (max-width: 480px) {
+    .auth-container {
+        padding: 20px 15px;
+    }
+
+    .auth-container h1 {
+        font-size: 20px;
+    }
+
+    .auth-container input,
+    .auth-container button {
+        font-size: 14px;
+        padding: 10px;
+    }
+}

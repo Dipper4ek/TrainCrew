@@ -18,18 +18,33 @@
     </div>
     <nav>
         {% if user.is_authenticated %}
-            <a href="{% url 'profile' %}">Profile</a>
             <a href="{% url 'map' %}">Map</a>
-            <a href="{% url 'logout' %}">Logout</a>
             <a href="{% url 'user_search' %}">Search</a>
             <a href="{% url 'chat_list'  %}">Chat</a>
-
-        {% else %}
-            <a href="{% url 'login' %}">Login</a>
-            <a href="{% url 'register' %}">Sign Up</a>
         {% endif %}
 
     </nav>
+
+    <div class="avatar-dropdown">
+    <button class="avatar-btn">
+         {% if profile.avatar %}
+     <a><img src="{{ profile.avatar.url }}" alt="Avatar" style="width: 30px; height: 30px; object-fit:cover;border-radius:50%; solid white; padding: 0px 10px;"></a>
+    {% else %}
+     <a><img src="{% static 'app/images/default-avatar.jpg' %}" alt="Avatar" style="width: 30px; height: 30px; object-fit:cover;border-radius:50%;  solid white; padding: 0фpx 10px; "></a>
+    {% endif %}
+    </button>
+
+    <div class="avatar-menu">
+        <a href="{% url 'profile' %}">Profile</a>
+        <a href="{% url 'logout' %}">Logout</a>
+        <a href="{% url 'home_page' %}">Settings</a>
+    </div>
+</div>
+
+
+
+
+
 
 </header>
 

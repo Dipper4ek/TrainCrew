@@ -1,5 +1,4 @@
 import json
-from django.shortcuts import render
 from django.views import View
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
@@ -12,6 +11,28 @@ from .models import Profile, Chat, Post, UserLocation
 from django.shortcuts import render, get_object_or_404
 from .forms import MessageForm
 from django.http import JsonResponse
+from django.core.mail import send_mail
+from .forms import RegisterForm
+from .models import EmailVerification
+import random
+
+
+def verify_email(request, user_id):
+    user = User.objects.get(id=user_id)
+    verification = EmailVerification.objects.get(user=user)
+
+    if request.method == "POST":
+        code = request.POST['code']
+        if verification.code == code and not verification.is_expired():
+            user.is_active = True
+            user.save()
+            verification.delete()  # видаляємо код після успішної активації
+            login(request, user)
+            return redirect("profile")
+        else:
+            return render(request, "app/verify_email.html", {"error": "Невірний або прострочений код"})
+
+    return render(request, "app/verify_email.html")
 
 @login_required
 def map_view(request):
@@ -50,6 +71,11 @@ def update_location(request):
         return JsonResponse({"status": "ok"})
 
     return JsonResponse({"status": "error"})
+
+
+
+
+
 class HomePageView(View):
 
     def get(self, request):
@@ -57,25 +83,35 @@ class HomePageView(View):
 
 
 def register(request):
-    if request.method == 'POST':
-        username = request.POST['username']  # для входу
+    if request.method == "POST":
+        username = request.POST['username']
+        email = request.POST['email']
         password = request.POST['password']
-        display_name = request.POST['display_name']  # нове поле для публічного імені
 
         if User.objects.filter(username=username).exists():
-            messages.error(request, "User already exists!")
-            return redirect('register')
+            return render(request, "app/register.html", {"error": "User already exists"})
 
-        # Створюємо користувача
-        user = User.objects.create_user(username=username, password=password)
-        login(request, user)
+        # Створюємо користувача, але робимо його неактивним
+        user = User.objects.create_user(username=username, email=email, password=password)
+        user.is_active = False
+        user.save()
 
-        # Створюємо профіль з display_name
-        Profile.objects.create(user=user, name=display_name)
+        # Створюємо код підтвердження
+        code = str(random.randint(100000, 999999))
+        EmailVerification.objects.create(user=user, code=code)
 
-        return redirect('profile')
+        # Відправляємо код на email
+        send_mail(
+            "Код підтвердження реєстрації",
+            f"Ваш код: {code}",
+            "noreply@traincrew.com",
+            [email],
+        )
 
-    return render(request, 'app/register.html')
+        return redirect("verify_email", user_id=user.id)
+
+    return render(request, "app/register.html")
+
 
 def login_view(request):
     if request.method == 'POST':
@@ -84,7 +120,7 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('profile')
+            return redirect('home_page')
         messages.error(request, "Невірний логін або пароль!")
         return redirect('login')
     return render(request, 'app/login.html')

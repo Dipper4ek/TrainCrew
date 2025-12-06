@@ -1,7 +1,9 @@
+import os
 from django.db import models
 from django.contrib.auth.models import User
-import os
-
+import uuid
+from datetime import datetime, timedelta
+import random
 class Profile(models.Model):
     name = models.CharField(max_length=20)
     description = models.TextField(blank=True)
@@ -27,8 +29,7 @@ class Profile(models.Model):
         super().save(*args, **kwargs)
 
 
-from django.db import models
-from django.contrib.auth.models import User
+
 
 class Chat(models.Model):
     participants = models.ManyToManyField(User, related_name="chats")
@@ -55,6 +56,18 @@ class UserLocation(models.Model):
     def __str__(self):
         return self.user.username
 
+
+
+def generate_code():
+    return str(random.randint(100000, 999999))
+
+class EmailVerification(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    code = models.CharField(max_length=6, default=generate_code)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def is_expired(self):
+        return self.created_at < datetime.now() - timedelta(minutes=30)  # код дійсний 30 х
 
 
 

@@ -18,5 +18,6 @@ urlpatterns = [
     path("map/", map_view, name="map"),
     path("api/map/", get_all_locations),
     path("api/update-location/", update_location),
+    path("verify-email/<int:user_id>/", views.verify_email, name="verify_email"),
 
 ]
