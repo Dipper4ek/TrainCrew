@@ -1,32 +1,13 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Карта користувачів</title>
-    <meta charset="utf-8">
+{% extends 'app/base.html' %}
+{% load static %}
+{% block title %}Карта користувачів{% endblock %}
 
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
-    <style>
-        body { margin: 0; }
-        #map { height: 100vh; }
-        .btn {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 999;
-            padding: 12px 20px;
-            background: black;
-            color: white;
-            border-radius: 10px;
-            cursor: pointer;
-        }
-    </style>
-</head>
-<body>
-
+{% block content %}
 <div class="btn" onclick="sendLocation()">📍 Поділитись місцем</div>
-<div id="map"></div>
+<div id="map" style="height: 80vh;"></div>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
 <script>
 const map = L.map('map').setView([50.45, 30.52], 4);
@@ -57,7 +38,6 @@ function loadUsers() {
 setInterval(loadUsers, 5000);
 loadUsers();
 
-
 function sendLocation() {
     navigator.geolocation.getCurrentPosition(pos => {
         fetch("/api/update-location/", {
@@ -76,5 +56,17 @@ function openChat(userId) {
 }
 </script>
 
-</body>
-</html>
+<style>
+.btn {
+    position: fixed;
+    top: 100px;
+    left: 20px;
+    z-index: 999;
+    padding: 12px 20px;
+    background: black;
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+}
+</style>
+{% endblock %}
